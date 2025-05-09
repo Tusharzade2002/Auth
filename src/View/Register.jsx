@@ -2,29 +2,64 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authregister } from "../Store/AuthThunk";
 import { useNavigate } from "react-router-dom";
-import {toast, Toaster} from "react-hot-toast"
-import signin from '../assets/Sign up-amico.png'
+import { toast, Toaster } from "react-hot-toast";
+import signin from "../assets/Sign up-amico.png";
 function Register() {
   const [formData, setformdata] = useState({
     name: "",
     email: "",
     password: "",
   });
-    const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return "At least 8 characters required.";
+    }
+    if (!/[A-Z]/.test(password)) {
+      return "Include at least one uppercase letter.";
+    }
+    if (!/[a-z]/.test(password)) {
+      return "Include at least one lowercase letter.";
+    }
+    if (!/[0-9]/.test(password)) {
+      return "Include at least one number.";
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      return "Include at least one special character.";
+    }
+    return "";
+  };
   const handleregister = async (e) => {
     e.preventDefault();
     setError("");
+
+    const pwdError = validatePassword(formData.password);
+    if (pwdError) {
+      setPasswordError(pwdError);
+      return;
+    }
     try {
-      const response = await dispatch(authregister(formData)).unwrap();
-      console.log(response.data);
-      return response.data;
-      
+      if (!error) {
+        const response = await dispatch(authregister(formData)).unwrap();
+        console.log(response.data);
+        setError("");
+        toast.success("Register successfully..");
+        setformdata({
+          name: "",
+          email: "",
+          password: "",
+        });
+        return response.data;
+      } 
     } catch (err) {
       console.log("errror");
-      toast.success("Error While Registration.....")
+      setError(err);
+      toast.error("Error While Registration.....");
     }
 
     setformdata({
@@ -33,24 +68,27 @@ function Register() {
       password: "",
     });
   };
-        useEffect(() => {
-      setTimeout(() => {
-        navigate("/login");
-      }, [3000]);
+//       useEffect(() => {
+//     setTimeout(() => {
+//       navigate("/login");
+//     }, [3000]);
 
-    }, [handleregister]);
+//   }, [handleregister]);
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-purple-400 p-4">
       <div className="flex bg-white px-20 py-10 rounded-xl shadow-lg ">
-        <div className="me-10"><img className="h-80 w-[450px] " src={signin} /></div>
+        <div className="me-10">
+          <img className="h-80 w-[450px] " src={signin} />
+        </div>
         <div className="w-full max-w-md ">
           <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
           <div className="flex flex-col gap-4">
-                {error && (
-          <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">
-            {error}
-          </div>
-        )}
+            {error && (
+              <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">
+                {error}
+              </div>
+            )}
             <div className="flex flex-col">
               <label className="mb-1 text-gray-700">Name:</label>
               <input
@@ -92,7 +130,9 @@ function Register() {
                 }
               />
             </div>
-
+            {passwordError && (
+              <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+            )}
             <button
               onClick={handleregister}
               className="bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition"
@@ -102,7 +142,7 @@ function Register() {
           </div>
         </div>
       </div>
-      <Toaster/>
+      <Toaster />
     </div>
   );
 }
