@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authregister } from "../Store/AuthThunk";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import signin from "../assets/Sign up-amico.png";
 function Register() {
@@ -68,12 +68,12 @@ function Register() {
       password: "",
     });
   };
-//       useEffect(() => {
-//     setTimeout(() => {
-//       navigate("/login");
-//     }, [3000]);
+      useEffect(() => {
+    setTimeout(() => {
+      navigate("/login");
+    }, [3000]);
 
-//   }, [handleregister]);
+  }, [handleregister]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-purple-400 p-4">
@@ -133,6 +133,7 @@ function Register() {
             {passwordError && (
               <p className="text-red-600 text-sm mt-1">{passwordError}</p>
             )}
+            <p>Already Have an Account <Link to="/login">Login</Link></p>
             <button
               onClick={handleregister}
               className="bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition"

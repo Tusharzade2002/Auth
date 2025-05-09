@@ -67,6 +67,7 @@ function Login() {
                 }
               />
             </div>
+            <p>Don't Have An Account? <Link to="/register">Register</Link></p>
 
             <button
               onClick={handlelogin}
