@@ -4,6 +4,7 @@ import { authlogin } from "../Store/AuthThunk";
 import { useNavigate } from "react-router-dom";
 import login from '../assets/Login-amico.png'
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 function Login() {
   const [formData, setformdata] = useState({
     email: "",
