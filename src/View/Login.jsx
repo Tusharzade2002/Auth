@@ -6,6 +6,7 @@ import login from '../assets/Login-amico.png'
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 function Login() {
+  const [error,seterror] =useState(false)
   const [formData, setformdata] = useState({
     email: "",
     password: "",
@@ -17,17 +18,19 @@ function Login() {
     try {
       const user = await dispatch(authlogin(formData)).unwrap();
       localStorage.setItem("currentuser", JSON.stringify(user));
+       toast.success("login Sucessfully.. Redirecting DashBoard...")
+
       console.log(user);
       setformdata({
         email: "",
         password: "",
       });
-      toast.success("login Sucessfully.. Redirecting DashBoard...")
       setTimeout(() => {
         navigate("/dashboard");
       }, 3000);
     } catch (err) {
       console.log("errror");
+      seterror(true)
     }
   };
   return (
@@ -54,7 +57,7 @@ function Login() {
                 }
               />
             </div>
-
+                      {error && <p className="text-red-500"> invalid passsword</p>}
             <div className="flex flex-col">
               <label className="mb-1 text-gray-700">Password:</label>
               <input
@@ -68,7 +71,7 @@ function Login() {
                 }
               />
             </div>
-            <p>Don't Have An Account? <Link to="/register">Register</Link></p>
+            <p>Don't Have An Account? <Link className="font-bold" to="/">Register</Link></p>
 
             <button
               onClick={handlelogin}

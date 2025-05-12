@@ -46,9 +46,9 @@ function Register() {
     try {
       if (!error) {
         const response = await dispatch(authregister(formData)).unwrap();
+        toast.success("Registration succesfully")
         console.log(response.data);
         setError("");
-        toast.success("Register successfully..");
         setformdata({
           name: "",
           email: "",
@@ -74,6 +74,9 @@ function Register() {
     }, [3000]);
 
   }, [handleregister]);
+  if(token){
+    toast.error("You have already register")
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-purple-400 p-4">
@@ -133,7 +136,7 @@ function Register() {
             {passwordError && (
               <p className="text-red-600 text-sm mt-1">{passwordError}</p>
             )}
-            <p>Already Have an Account <Link to="/login">Login</Link></p>
+            <p>Already Have an Account <Link className="font-bold" to="/login">Login</Link></p>
             <button
               onClick={handleregister}
               className="bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition"
